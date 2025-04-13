@@ -6,7 +6,8 @@
  * @Description: 首页组件
  */
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * 生成随机房间 ID
@@ -21,10 +22,18 @@ const generateRoomId = () => {
 function Home() {
   const [roomId, setRoomId] = useState('');
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   // 加入房间
   const handleJoinRoom = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isAuthenticated) {
+      // 未登录时，跳转到登录页面
+      navigate('/login', { state: { message: '请先登录后再加入房间', from: '/' } });
+      return;
+    }
+    
     if (roomId.trim()) {
       navigate(`/room/${roomId}`);
     }
@@ -32,6 +41,12 @@ function Home() {
 
   // 创建新房间
   const handleCreateRoom = () => {
+    if (!isAuthenticated) {
+      // 未登录时，跳转到登录页面
+      navigate('/login', { state: { message: '请先登录后再创建房间', from: '/' } });
+      return;
+    }
+    
     const newRoomId = generateRoomId();
     navigate(`/room/${newRoomId}`);
   };
@@ -42,6 +57,26 @@ function Home() {
         <h2 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
           加入画布聊天室
         </h2>
+        
+        {!isAuthenticated && (
+          <div className="bg-amber-600 text-white p-4 rounded mt-4 text-center">
+            <p className="mb-2">您需要先登录才能创建或加入房间</p>
+            <div className="mt-2 flex justify-center space-x-4">
+              <Link 
+                to="/login" 
+                className="px-4 py-2 bg-white text-amber-600 rounded hover:bg-gray-100 transition-colors"
+              >
+                登录
+              </Link>
+              <Link 
+                to="/register" 
+                className="px-4 py-2 bg-amber-700 text-white rounded hover:bg-amber-800 transition-colors"
+              >
+                注册
+              </Link>
+            </div>
+          </div>
+        )}
         
         <form onSubmit={handleJoinRoom} className="mt-8 space-y-6">
           <div className="space-y-2">

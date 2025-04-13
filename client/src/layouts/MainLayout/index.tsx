@@ -2,28 +2,58 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-11 20:30:00
+ * @LastEditTime: 2025-04-14 00:10:53
  * @Description: 主布局组件
  */
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * 主布局组件
  */
 function MainLayout() {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       {/* 页面头部 */}
       <header className="py-6 px-4 sm:px-6 lg:px-8 border-b border-gray-700">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <h1 className="text-2xl md:text-3xl font-bold mb-4 sm:mb-0 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
+          <Link to="/" className="text-2xl md:text-3xl font-bold mb-4 sm:mb-0 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
             协作画布聊天室
-          </h1>
-          
+          </Link>
+
           <div className="flex items-center space-x-4">
-            <a 
-              href="https://github.com/yourusername/simple-crdt-chatroom-canvas" 
-              target="_blank" 
+            {/* 导航菜单 */}
+            <nav className="flex items-center space-x-4">
+              {isAuthenticated ? (
+                <>
+                  <span className="text-gray-300">欢迎, {user?.username}</span>
+                  <Link to="/profile" className="text-gray-300 hover:text-white transition-colors">个人资料</Link>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
+                  >
+                    退出
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="text-gray-300 hover:text-white transition-colors">登录</Link>
+                  <Link to="/register" className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors">注册</Link>
+                </>
+              )}
+            </nav>
+
+            <a
+              href="https://github.com/yourusername/simple-crdt-chatroom-canvas"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-white transition-colors"
             >
@@ -34,12 +64,12 @@ function MainLayout() {
           </div>
         </div>
       </header>
-      
+
       {/* 主内容区 */}
       <main className="flex-grow">
         <Outlet />
       </main>
-      
+
       {/* 页脚 */}
       <footer className="py-4 px-4 border-t border-gray-700 text-center text-gray-400 text-sm">
         <div className="container mx-auto">
@@ -50,4 +80,4 @@ function MainLayout() {
   );
 }
 
-export default MainLayout; 
+export default MainLayout;

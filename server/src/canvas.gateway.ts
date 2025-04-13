@@ -13,6 +13,7 @@ import * as Y from 'yjs';
 import { encodeStateAsUpdate, applyUpdate } from 'yjs';
 
 @WebSocketGateway({
+  namespace: 'canvas',
   cors: {
     origin: '*',
   },
@@ -55,7 +56,11 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
 
       // Notify others in the room
-      this.server.to(roomId).emit('userLeft', { userId: client.id });
+      const usersCount = this.server.sockets.adapter.rooms.get(roomId)?.size || 0;
+      this.server.to(roomId).emit('userLeft', {
+        userId: client.id,
+        usersCount
+      });
     }
   }
 

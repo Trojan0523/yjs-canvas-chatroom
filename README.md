@@ -13,7 +13,7 @@ A collaborative drawing application that uses CRDT (Conflict-free Replicated Dat
 ## Technologies
 
 - **Backend**: NestJS, WebSockets, Yjs
-- **Frontend**: React, Vite, styled-components
+- **Frontend**: React, Vite
 - **CRDT Implementation**: Yjs
 
 ## Project Structure
