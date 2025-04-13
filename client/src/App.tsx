@@ -1,29 +1,21 @@
-import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import styled from 'styled-components'
-import Home from './components/Home'
-import Canvas from './components/Canvas'
+/*
+ * @Author: BuXiongYu
+ * @Date: 2025-04-11 18:44:43
+ * @LastEditors: BuXiongYu
+ * @LastEditTime: 2025-04-11 20:30:00
+ * @Description: App根组件
+ */
 
-const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  text-align: center;
-`
-
+/**
+ * App根组件
+ * 注意：主要路由逻辑已移至routes/index.tsx
+ */
 function App() {
   return (
-    <Router>
-      <AppContainer>
-        <h1>Collaborative Canvas Chatroom</h1>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/room/:roomId" element={<Canvas />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AppContainer>
-    </Router>
-  )
+    <div className="app">
+      {/* App根容器 */}
+    </div>
+  );
 }
 
-export default App
+export default App;

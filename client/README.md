@@ -1,54 +1,53 @@
-# React + TypeScript + Vite
+<!--
+ * @Author: BuXiongYu
+ * @Date: 2025-04-11 18:44:43
+ * @LastEditors: BuXiongYu
+ * @LastEditTime: 2025-04-11 19:14:47
+ * @Description: 请填写简介
+-->
+# Simple CRDT Canvas Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend client for the collaborative canvas application. It uses React with Vite, Yjs for CRDT, and Socket.io for real-time communication.
 
-Currently, two official plugins are available:
+## Setup Instructions
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Install dependencies:
+```bash
+npm install --legacy-peer-deps
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Note: We need `--legacy-peer-deps` because react-canvas-draw has older peer dependencies that are not compatible with React 19.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Running the App
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+1. Make sure the server is running first (in the `server` directory).
+2. Start the client:
+```bash
+npm run dev
 ```
+3. Open your browser to the URL shown in the terminal (typically http://localhost:5173).
+
+## Troubleshooting Drawing Issues
+
+If you experience issues with the canvas, such as unwanted additions to your drawings or synchronization problems, you can try these solutions:
+
+1. **Decrease drawing speed**: Sometimes making rapid strokes can cause synchronization issues.
+
+2. **Refresh all connected clients**: If drawings get out of sync, having all users refresh their browser can help.
+
+3. **Adjust network settings**: If you're running locally and still have issues, try:
+   ```bash
+   # In client/src/components/Canvas.tsx
+   # Increase the debounce time from 50 to a higher value, e.g. 100ms:
+   setTimeout(() => {
+     isLocalUpdate.current = false;
+   }, 100); // Increase from 50ms to 100ms
+   ```
+
+4. **Clear and restart**: When all else fails, use the "Clear Canvas" button to reset the canvas state for all connected users.
+
+## Additional Notes
+
+- Each client needs a modern browser that supports WebSockets and Canvas.
+- Multiple people can draw simultaneously without conflicts thanks to the CRDT technology.
+- Each room has a unique ID that can be shared with others to join the same canvas.
