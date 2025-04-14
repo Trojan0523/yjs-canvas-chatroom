@@ -28,7 +28,10 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // Keep track of active drawing users
   private activeDrawingUsers: Map<string, Set<string>> = new Map();
 
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) {
+    // 启动定时广播用户数量
+    setInterval(() => this.broadcastUserCounts(), 10000);
+  }
 
   handleConnection(client: Socket): void {
     console.log(`Client connected: ${client.id}`);
@@ -57,7 +60,7 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       // Notify others in the room
       const usersCount = this.server.sockets.adapter.rooms.get(roomId)?.size || 0;
-      this.server.to(roomId).emit('userLeft', {
+      this.server.in(roomId).emit('userLeft', {
         userId: client.id,
         usersCount
       });
@@ -125,10 +128,15 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Notify others in the room
     const usersCount = this.server.sockets.adapter.rooms.get(roomId)?.size || 0;
     console.log(`Notifying room ${roomId} of new user, total users: ${usersCount}`);
-    this.server.to(roomId).emit('userJoined', {
+
+    // 使用in而不是to确保所有用户（包括新加入的用户）都收到通知
+    this.server.in(roomId).emit('userJoined', {
       userId: client.id,
       usersCount
     });
+
+    // 同时确保新用户立即获取到正确的用户数量
+    client.emit('userCount', { usersCount });
   }
 
   @SubscribeMessage('sync')
@@ -241,6 +249,42 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
       } catch (err) {
         console.error(`Error clearing canvas for room ${roomId}:`, err);
       }
+    }
+  }
+
+  @SubscribeMessage('getUserCount')
+  handleGetUserCount(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { roomId: string }
+  ): void {
+    const { roomId } = data;
+    console.log(`User count request from client ${client.id} for room ${roomId}`);
+
+    // 获取房间当前用户数量
+    const usersCount = this.server.sockets.adapter.rooms.get(roomId)?.size || 0;
+    console.log(`Sending user count to client ${client.id}, count: ${usersCount}`);
+
+    // 发送给请求的客户端
+    client.emit('userCount', { usersCount });
+  }
+
+  // 广播所有房间的用户数量
+  private broadcastUserCounts(): void {
+    // 获取所有房间
+    const rooms = this.server?.sockets?.adapter?.rooms;
+    if (!rooms) return;
+    // 遍历所有房间，排除Socket.IO自动创建的房间（与客户端ID相同的房间）
+    for (const [roomId, room] of rooms.entries()) {
+      // 跳过与客户端ID相同的房间
+      if (this.server.sockets.sockets.has(roomId)) {
+        continue;
+      }
+
+      const usersCount = room.size;
+      console.log(`Broadcasting user count for room ${roomId}: ${usersCount}`);
+
+      // 广播用户数量
+      this.server.in(roomId).emit('userCount', { usersCount });
     }
   }
 }

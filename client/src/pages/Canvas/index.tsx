@@ -150,6 +150,9 @@ function Canvas() {
             }
           })
           .catch(err => console.error('Error fetching room info:', err));
+
+        // 请求最新的房间用户数量
+        socket.emit('getUserCount', { roomId });
       }, 500);
     });
 
@@ -197,6 +200,14 @@ function Canvas() {
     socket.on('userLeft', (data: { userId: string; usersCount: number }) => {
       console.log(`User left: ${data.userId}, count: ${data.usersCount}`);
       // 确保设置有效的用户数
+      if (typeof data.usersCount === 'number' && data.usersCount >= 0) {
+        setUsersCount(data.usersCount);
+      }
+    });
+
+    // 接收直接的用户数量更新
+    socket.on('userCount', (data: { usersCount: number }) => {
+      console.log(`Received direct user count update: ${data.usersCount}`);
       if (typeof data.usersCount === 'number' && data.usersCount >= 0) {
         setUsersCount(data.usersCount);
       }

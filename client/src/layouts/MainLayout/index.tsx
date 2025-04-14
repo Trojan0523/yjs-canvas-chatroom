@@ -2,7 +2,7 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-14 00:10:53
+ * @LastEditTime: 2025-04-14 09:48:13
  * @Description: 主布局组件
  */
 import { Outlet, Link, useNavigate } from 'react-router-dom';
@@ -52,7 +52,7 @@ function MainLayout() {
             </nav>
 
             <a
-              href="https://github.com/yourusername/simple-crdt-chatroom-canvas"
+              href="https://github.com/trojan0523/simple-crdt-chatroom-canvas"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-300 hover:text-white transition-colors"

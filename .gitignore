@@ -33,3 +33,6 @@ yarn-error.log*
 coverage
 
 /server/client-dist
+
+/client/playwright-report
+/client/test-results
