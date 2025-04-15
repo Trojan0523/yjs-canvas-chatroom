@@ -2,7 +2,7 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-14 09:48:13
+ * @LastEditTime: 2025-04-15 18:59:41
  * @Description: 主布局组件
  */
 import { Outlet, Link, useNavigate } from 'react-router-dom';
@@ -66,7 +66,7 @@ function MainLayout() {
                 <div className="relative">
                   <button
                     onClick={toggleProfileDropdown}
-                    className="flex items-center space-x-2 text-gray-300 hover:text-white focus:outline-none"
+                    className="flex items-center space-x-2 bg-gray-900 text-gray-300 hover:text-white focus:outline-none"
                   >
                     {userAvatar ? (
                       <img
