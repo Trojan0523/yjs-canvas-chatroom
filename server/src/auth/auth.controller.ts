@@ -41,6 +41,23 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Req() req: RequestWithUser) {
+    // 获取当前用户
+    const userId = req.user.id;
+
+    // 在实际应用中，你可能需要:
+    // 1. 添加token到黑名单
+    // 2. 清除服务器端的会话状态
+    // 3. 记录退出登录日志
+
+    return {
+      message: '退出登录成功',
+      userId,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req: RequestWithUser) {
     return req.user;

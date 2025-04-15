@@ -5,6 +5,10 @@ export interface User {
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  providerId?: string;
+  provider?: string;
+  photo?: string;
+  displayName?: string;
 }
 
 export interface LoginRequest {
@@ -29,4 +33,4 @@ export interface AuthState {
   token: string | null;
   loading: boolean;
   error: string | null;
-} 
+}

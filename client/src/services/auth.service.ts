@@ -3,6 +3,12 @@ import { LoginRequest, RegisterRequest, AuthResponse, User } from '../types/auth
 const API_URL = import.meta.env.VITE_API_URL || '';
 
 /**
+ * 检查是否在浏览器环境中
+ * 用于避免在服务端渲染时访问window对象导致错误
+ */
+const isBrowser = typeof window !== 'undefined';
+
+/**
  * 用户认证服务
  */
 export const AuthService = {
@@ -81,7 +87,7 @@ export const AuthService = {
    * @returns 用户信息
    */
   async getProfile(): Promise<User> {
-    const token = localStorage.getItem('token');
+    const token = isBrowser ? localStorage.getItem('token') : null;
 
     if (!token) {
       throw new Error('未授权');
@@ -109,6 +115,8 @@ export const AuthService = {
    * @param user 用户信息
    */
   saveAuth(token: string, user: User): void {
+    if (!isBrowser) return;
+
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
   },
@@ -117,8 +125,69 @@ export const AuthService = {
    * 清除认证信息
    */
   clearAuth(): void {
+    if (!isBrowser) return;
+
+    // 清除本地存储的认证信息
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+
+    // 清除可能存在的第三方认证cookie
+    this.clearOAuthCookies();
+
+    // 如果有其他存储位置，也清除它们
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+  },
+
+  /**
+   * 清除三方登录相关的cookie
+   * 这个方法会尝试清除常见的OAuth相关cookie
+   */
+  clearOAuthCookies(): void {
+    if (!isBrowser) return;
+
+    // 获取所有domains的cookies
+    const hostname = window.location.hostname;
+    const domains = [
+      hostname,
+      `.${hostname}`,
+      '',
+    ];
+
+    // 常见的OAuth cookie名称
+    const cookieNames = [
+      'github-oauth-state',
+      'google-oauth-state',
+      'oauth_token',
+      'oauth_state',
+      'auth_provider',
+      'auth_session'
+    ];
+
+    // 清除所有可能的组合
+    domains.forEach(domain => {
+      cookieNames.forEach(name => {
+        document.cookie = `${name}=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict;`;
+      });
+    });
+
+    // 清除所有包含auth, oauth, token关键词的cookie
+    const allCookies = document.cookie.split(';');
+    for (const cookie of allCookies) {
+      const cookieName = cookie.split('=')[0].trim();
+      if (
+        cookieName.toLowerCase().includes('auth') ||
+        cookieName.toLowerCase().includes('oauth') ||
+        cookieName.toLowerCase().includes('token') ||
+        cookieName.toLowerCase().includes('session') ||
+        cookieName.toLowerCase().includes('github') ||
+        cookieName.toLowerCase().includes('google')
+      ) {
+        domains.forEach(domain => {
+          document.cookie = `${cookieName}=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict;`;
+        });
+      }
+    }
   },
 
   /**
@@ -126,6 +195,10 @@ export const AuthService = {
    * @returns 令牌和用户信息
    */
   getAuth(): { token: string | null; user: User | null } {
+    if (!isBrowser) {
+      return { token: null, user: null };
+    }
+
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
     const user = userStr ? JSON.parse(userStr) : null;
@@ -138,6 +211,6 @@ export const AuthService = {
    * @returns 是否已认证
    */
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return isBrowser ? !!localStorage.getItem('token') : false;
   },
 };

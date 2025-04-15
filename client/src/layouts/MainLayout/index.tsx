@@ -7,6 +7,8 @@
  */
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useState } from 'react';
+import { LogOut, Menu, X, User as UserIcon, ChevronDown } from 'lucide-react';
 
 /**
  * 主布局组件
@@ -14,66 +16,227 @@ import { useAuth } from '../../contexts/AuthContext';
 function MainLayout() {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const toggleProfileDropdown = () => setProfileDropdownOpen(!profileDropdownOpen);
+
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
+    setProfileDropdownOpen(false);
   };
+
+  // 获取显示名称 - 优先使用OAuth提供的displayName
+  const displayName = user?.displayName || user?.username || '用户';
+
+  // 检查是否是OAuth用户以及具体提供商
+  const isGithubUser = user?.provider === 'github';
+  const isGoogleUser = user?.provider === 'google';
+
+  // 用户头像 - 如果有OAuth提供的头像则使用它
+  const userAvatar = user?.photo;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       {/* 页面头部 */}
-      <header className="py-6 px-4 sm:px-6 lg:px-8 border-b border-gray-700">
-        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <Link to="/" className="text-2xl md:text-3xl font-bold mb-4 sm:mb-0 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
+      <header className="py-4 px-4 sm:px-6 lg:px-8 border-b border-gray-700 sticky top-0 z-10 bg-gray-900 bg-opacity-95 backdrop-blur-sm">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link to="/" className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
             协作画布聊天室
           </Link>
 
-          <div className="flex items-center space-x-4">
-            {/* 导航菜单 */}
-            <nav className="flex items-center space-x-4">
-              {isAuthenticated ? (
-                <>
-                  <span className="text-gray-300">欢迎, {user?.username}</span>
-                  <Link to="/profile" className="text-gray-300 hover:text-white transition-colors">个人资料</Link>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
-                  >
-                    退出
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" className="text-gray-300 hover:text-white transition-colors">登录</Link>
-                  <Link to="/register" className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors">注册</Link>
-                </>
-              )}
-            </nav>
+          {/* 移动端菜单按钮 */}
+          <button
+            className="block md:hidden text-gray-300"
+            onClick={toggleMenu}
+            aria-label={menuOpen ? "关闭菜单" : "打开菜单"}
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
 
-            <a
-              href="https://github.com/trojan0523/simple-crdt-chatroom-canvas"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-              </svg>
-            </a>
-          </div>
+          {/* 导航菜单 - 大屏幕 */}
+          <nav className="hidden md:flex items-center space-x-6">
+            {isAuthenticated ? (
+              <>
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors">首页</Link>
+
+                {/* 用户信息和下拉菜单 */}
+                <div className="relative">
+                  <button
+                    onClick={toggleProfileDropdown}
+                    className="flex items-center space-x-2 text-gray-300 hover:text-white focus:outline-none"
+                  >
+                    {userAvatar ? (
+                      <img
+                        src={userAvatar}
+                        alt={displayName}
+                        className="w-8 h-8 rounded-full object-cover border border-gray-600"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center">
+                        <UserIcon size={16} />
+                      </div>
+                    )}
+                    <span className="flex items-center">
+                      {isGithubUser && (
+                        <span className="mr-1 text-xs px-1.5 py-0.5 bg-gray-700 rounded text-gray-300">
+                          GitHub
+                        </span>
+                      )}
+                      {isGoogleUser && (
+                        <span className="mr-1 text-xs px-1.5 py-0.5 bg-gray-700 rounded text-gray-300">
+                          Google
+                        </span>
+                      )}
+                      {displayName}
+                      <ChevronDown size={14} className="ml-1" />
+                    </span>
+                  </button>
+
+                  {/* 下拉菜单 */}
+                  {profileDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-700">
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                        onClick={() => setProfileDropdownOpen(false)}
+                      >
+                        个人资料
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left block px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 flex items-center"
+                      >
+                        <LogOut size={14} className="mr-2" />
+                        退出登录
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="text-gray-300 hover:text-white transition-colors">登录</Link>
+                <Link to="/register" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors">注册</Link>
+              </>
+            )}
+          </nav>
+
+          {/* 移动端菜单 */}
+          {menuOpen && (
+            <div className="fixed inset-0 z-50 flex md:hidden">
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50"
+                onClick={toggleMenu}
+                aria-hidden="true"
+              />
+              <div className="relative w-4/5 max-w-sm bg-gray-800 h-full overflow-y-auto p-5">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">菜单</h2>
+                  <button onClick={toggleMenu} className="text-gray-400">
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <Link
+                    to="/"
+                    className="block py-2 text-gray-300 hover:text-white"
+                    onClick={toggleMenu}
+                  >
+                    首页
+                  </Link>
+
+                  {isAuthenticated ? (
+                    <>
+                      {/* 移动端用户信息 */}
+                      <div className="py-3 border-t border-b border-gray-700 my-2">
+                        <div className="flex items-center space-x-3 mb-3">
+                          {userAvatar ? (
+                            <img
+                              src={userAvatar}
+                              alt={displayName}
+                              className="w-10 h-10 rounded-full object-cover border border-gray-600"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center">
+                              <UserIcon size={18} />
+                            </div>
+                          )}
+                          <div>
+                            <div className="flex items-center">
+                              {isGithubUser && (
+                                <span className="mr-1 text-xs px-1.5 py-0.5 bg-gray-700 rounded text-gray-300">
+                                  GitHub
+                                </span>
+                              )}
+                              {isGoogleUser && (
+                                <span className="mr-1 text-xs px-1.5 py-0.5 bg-gray-700 rounded text-gray-300">
+                                  Google
+                                </span>
+                              )}
+                            </div>
+                            <div className="font-medium">{displayName}</div>
+                            <div className="text-xs text-gray-400">{user?.email}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Link
+                        to="/profile"
+                        className="block py-2 text-gray-300 hover:text-white"
+                        onClick={toggleMenu}
+                      >
+                        个人资料
+                      </Link>
+
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          toggleMenu();
+                        }}
+                        className="w-full text-left block py-2 text-red-400 hover:text-red-300 flex items-center"
+                      >
+                        <LogOut size={16} className="mr-2" />
+                        退出登录
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        className="block py-2 text-gray-300 hover:text-white"
+                        onClick={toggleMenu}
+                      >
+                        登录
+                      </Link>
+                      <Link
+                        to="/register"
+                        className="block py-2 text-gray-300 hover:text-white"
+                        onClick={toggleMenu}
+                      >
+                        注册
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
-      {/* 主内容区 */}
-      <main className="flex-grow">
+      {/* 页面主内容 */}
+      <main className="flex-grow container mx-auto px-4 py-8">
         <Outlet />
       </main>
 
-      {/* 页脚 */}
-      <footer className="py-4 px-4 border-t border-gray-700 text-center text-gray-400 text-sm">
-        <div className="container mx-auto">
-          <p>© {new Date().getFullYear()} 协作画布聊天室 | 基于 CRDT 的实时协作应用</p>
+      {/* 页面底部 */}
+      <footer className="py-6 px-4 bg-gray-900 border-t border-gray-800">
+        <div className="container mx-auto text-center text-gray-400 text-sm">
+          <p>&copy; {new Date().getFullYear()} 协作画布聊天室. 保留所有权利.</p>
         </div>
       </footer>
     </div>
