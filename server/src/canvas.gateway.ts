@@ -261,7 +261,7 @@ export class CanvasGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(`User count request from client ${client.id} for room ${roomId}`);
 
     // 获取房间当前用户数量
-    const usersCount = this.server.sockets.adapter.rooms.get(roomId)?.size || 0;
+    const usersCount = this.server.sockets.adapter?.rooms.get(roomId)?.size || 0;
     console.log(`Sending user count to client ${client.id}, count: ${usersCount}`);
 
     // 发送给请求的客户端

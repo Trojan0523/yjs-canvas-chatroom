@@ -2,7 +2,7 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:45:51
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-11 20:10:09
+ * @LastEditTime: 2025-04-14 10:14:24
  * @Description: 请填写简介
  */
 import { NestFactory } from '@nestjs/core';
@@ -20,7 +20,7 @@ async function bootstrap() {
         credentials: true,
       },
     });
-    
+
     // 添加全局验证管道
     app.useGlobalPipes(
       new ValidationPipe({
@@ -29,24 +29,24 @@ async function bootstrap() {
         transform: true, // 自动转换类型
       }),
     );
-    
+
     // API前缀 - 将所有API路由移到/api路径下
     app.setGlobalPrefix('api');
-    
+
     // 获取Express实例
     const expressApp = app.getHttpAdapter().getInstance();
-    
+
     // 提供静态文件
     const clientPath = path.join(__dirname, '../../client/dist');
     expressApp.use(express.static(clientPath));
-    
+
     // 处理前端路由
     expressApp.use((req, res, next) => {
       // 跳过API和WebSocket请求
       if (req.url.startsWith('/api') || req.url.startsWith('/socket.io')) {
         return next();
       }
-      
+
       // 给前端的React路由
       res.sendFile(path.join(clientPath, 'index.html'), err => {
         if (err) {
@@ -55,7 +55,7 @@ async function bootstrap() {
         }
       });
     });
-    
+
     await app.listen(3000);
     console.log('Server running on http://localhost:3000');
   } catch (error) {
