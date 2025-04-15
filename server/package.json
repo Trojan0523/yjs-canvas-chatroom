@@ -10,7 +10,10 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:with-client": "node start-prod.js",
-    "dev": "concurrently \"npm run start:dev\" \"cd ../client && npm run dev\""
+    "dev": "concurrently \"npm run start:dev\" \"cd ../client && npm run dev\"",
+    "migration:generate": "typeorm migration:generate -n",
+    "migration:run": "typeorm migration:run",
+    "migration:revert": "typeorm migration:revert"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +22,7 @@
   "dependencies": {
     "@nestjs/cli": "^11.0.6",
     "@nestjs/common": "^11.0.15",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.15",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.5",

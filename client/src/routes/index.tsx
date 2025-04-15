@@ -9,13 +9,14 @@ import Canvas from '../pages/Canvas';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
 import Profile from '../pages/Auth/Profile';
+import OAuthCallback from '../pages/Auth/OAuthCallback';
 
 // 错误页面组件
 const ErrorPage: React.FC = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
     <h1 className="text-4xl font-bold mb-4">出错了！</h1>
     <p className="text-xl mb-8">页面未找到或发生错误</p>
-    <button 
+    <button
       onClick={() => window.location.href = '/'}
       className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
     >
@@ -29,17 +30,17 @@ const ErrorPage: React.FC = () => (
  */
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
   const { isAuthenticated, loading } = useAuth();
-  
+
   // 加载中显示加载状态
   if (loading) {
     return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">加载中...</div>;
   }
-  
+
   // 如果未认证，重定向到登录页
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
+
   // 已认证，渲染组件
   return <>{element}</>;
 };
@@ -49,17 +50,17 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
  */
 const PublicOnlyRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
   const { isAuthenticated, loading } = useAuth();
-  
+
   // 加载中显示加载状态
   if (loading) {
     return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">加载中...</div>;
   }
-  
+
   // 如果已认证，重定向到首页
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
-  
+
   // 未认证，渲染组件
   return <>{element}</>;
 };
@@ -92,6 +93,10 @@ export const routes: RouteObject[] = [
       {
         path: 'register',
         element: <PublicOnlyRoute element={<Register />} />,
+      },
+      {
+        path: 'oauth-callback',
+        element: <OAuthCallback />,
       },
       {
         path: '*',

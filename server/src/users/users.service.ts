@@ -57,10 +57,24 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  async findByProviderId(providerId: string, provider: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: {
+        providerId,
+        provider
+      }
+    });
+  }
+
+  async update(id: string, updateData: Partial<User>): Promise<User> {
+    await this.usersRepository.update(id, updateData);
+    return this.findOne(id);
+  }
+
   async remove(id: string): Promise<void> {
     const result = await this.usersRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
   }
-} 
+}

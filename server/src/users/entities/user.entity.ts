@@ -26,6 +26,19 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  // OAuth相关字段
+  @Column({ nullable: true })
+  providerId: string;
+
+  @Column({ nullable: true })
+  provider: string;
+
+  @Column({ nullable: true })
+  photo: string;
+
+  @Column({ nullable: true })
+  displayName: string;
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
@@ -34,4 +47,4 @@ export class User {
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
-} 
+}
