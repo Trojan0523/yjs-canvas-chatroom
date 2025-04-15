@@ -1,0 +1,286 @@
+/* Ghibli-inspired Theme */
+
+/* Custom Properties for Ghibli-inspired Color Palette */
+:root {
+  /* Ghibli-inspired soft color palette */
+  --ghibli-blue: #a8ccd7;
+  --ghibli-blue-light: #c4e0e8;
+  --ghibli-green: #90b77d;
+  --ghibli-green-light: #c2d8b9;
+  --ghibli-brown: #b2967d;
+  --ghibli-orange: #e8ac65;
+  --ghibli-pink: #ecbcbb;
+  --ghibli-cloud: #f5f5f5;
+  --ghibli-cloud-shadow: #e0e0e0;
+
+  /* Warm neutral background tones */
+  --ghibli-bg-warm: #f8f4e9;
+  --ghibli-bg-cream: #faf2e1;
+
+  /* Text colors */
+  --ghibli-text-dark: #54595f;
+  --ghibli-text-medium: #7a7e84;
+  --ghibli-text-light: #9da3af;
+
+  /* Animation timing */
+  --ghibli-animation-slow: 0.8s;
+  --ghibli-animation-medium: 0.5s;
+  --ghibli-animation-fast: 0.3s;
+}
+
+/* Base Elements */
+body {
+  background-color: var(--ghibli-bg-warm);
+  color: var(--ghibli-text-dark);
+  font-family: 'Noto Serif', 'Noto Sans SC', serif;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23dddad1' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Ghibli-inspired cloud decorative elements */
+.ghibli-cloud {
+  position: absolute;
+  background-color: var(--ghibli-cloud);
+  border-radius: 50%;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.1));
+  opacity: 0.9;
+  z-index: -1;
+  animation: float var(--ghibli-animation-slow) ease-in-out infinite alternate;
+}
+
+.ghibli-cloud:before,
+.ghibli-cloud:after {
+  content: '';
+  position: absolute;
+  background-color: var(--ghibli-cloud);
+  border-radius: 50%;
+}
+
+/* Ghibli-inspired container with subtle texture */
+.ghibli-container {
+  background-color: var(--ghibli-bg-cream);
+  border-radius: 16px;
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.05),
+    0 15px 30px rgba(176, 191, 170, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--ghibli-animation-medium) ease;
+}
+
+.ghibli-container:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23f0ece0' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.ghibli-container:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.07),
+    0 20px 40px rgba(176, 191, 170, 0.15);
+}
+
+/* Ghibli-inspired headings */
+.ghibli-heading {
+  color: var(--ghibli-text-dark);
+  font-family: 'Noto Serif', 'Noto Sans SC', serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
+  display: inline-block;
+}
+
+.ghibli-heading:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ghibli-green-light), var(--ghibli-blue-light), var(--ghibli-pink));
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+/* Ghibli-inspired buttons */
+.ghibli-button {
+  background: linear-gradient(135deg, var(--ghibli-blue), var(--ghibli-blue-light));
+  color: var(--ghibli-text-dark);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  cursor: pointer;
+  transition: all var(--ghibli-animation-fast) ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(176, 191, 170, 0.2);
+}
+
+.ghibli-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: all var(--ghibli-animation-fast) ease;
+}
+
+.ghibli-button:hover:before {
+  left: 100%;
+}
+
+.ghibli-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(168, 204, 215, 0.4);
+}
+
+.ghibli-button:active {
+  transform: translateY(1px);
+}
+
+.ghibli-button:disabled {
+  background: var(--ghibli-cloud-shadow);
+  color: var(--ghibli-text-light);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.ghibli-button-green {
+  background: linear-gradient(135deg, var(--ghibli-green), var(--ghibli-green-light));
+}
+
+.ghibli-button-green:hover {
+  box-shadow: 0 5px 15px rgba(144, 183, 125, 0.4);
+}
+
+.ghibli-button-orange {
+  background: linear-gradient(135deg, var(--ghibli-orange), #f5c89c);
+}
+
+.ghibli-button-orange:hover {
+  box-shadow: 0 5px 15px rgba(232, 172, 101, 0.4);
+}
+
+/* Ghibli-inspired form elements */
+.ghibli-input {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--ghibli-cloud-shadow);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  transition: all var(--ghibli-animation-fast) ease;
+  font-size: 1rem;
+  color: var(--ghibli-text-dark);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ghibli-input:focus {
+  outline: none;
+  border-color: var(--ghibli-blue);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.05),
+    0 0 0 3px rgba(168, 204, 215, 0.2);
+}
+
+.ghibli-input::placeholder {
+  color: var(--ghibli-text-light);
+}
+
+/* Ghibli-inspired alert/notification boxes */
+.ghibli-alert {
+  border-radius: 8px;
+  padding: 1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.ghibli-alert:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.ghibli-alert-blue {
+  background-color: rgba(168, 204, 215, 0.2);
+  color: #5a8fa1;
+}
+
+.ghibli-alert-orange {
+  background-color: rgba(232, 172, 101, 0.2);
+  color: #b77b33;
+}
+
+.ghibli-alert-green {
+  background-color: rgba(144, 183, 125, 0.2);
+  color: #5a7f47;
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  100% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Additional decorative elements */
+.ghibli-leaf {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: var(--ghibli-green-light);
+  opacity: 0.3;
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+.ghibli-cloud-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .ghibli-container {
+    padding: 1.5rem;
+  }
+
+  .ghibli-heading {
+    font-size: 1.5rem;
+  }
+}

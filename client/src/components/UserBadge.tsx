@@ -2,6 +2,7 @@ import React from 'react';
 import { User } from '../types/auth.types';
 import { Badge } from './ui/badge';
 import { Github, User as UserIcon } from 'lucide-react';
+import '../assets/ghibli-theme.css';
 
 interface UserBadgeProps {
   user: User | null;
@@ -57,33 +58,33 @@ const UserBadge: React.FC<UserBadgeProps> = ({
         <img
           src={userAvatar}
           alt={displayName}
-          className={`${sizeClasses.avatar} rounded-full object-cover border border-gray-600`}
+          className={`${sizeClasses.avatar} rounded-full object-cover border border-ghibli-blue-light border-opacity-40`}
         />
       ) : (
-        <div className={`${sizeClasses.avatar} rounded-full bg-indigo-600/70 flex items-center justify-center`}>
-          <UserIcon size={sizeClasses.icon} />
+        <div className={`${sizeClasses.avatar} rounded-full bg-ghibli-blue bg-opacity-30 flex items-center justify-center`}>
+          <UserIcon size={sizeClasses.icon} className="text-ghibli-text-dark" />
         </div>
       )}
 
       <div>
         <div className="flex items-center gap-1.5">
           {isGithubUser && (
-            <Badge variant="secondary" className="gap-1 py-0">
+            <Badge variant="secondary" className="gap-1 py-0 bg-ghibli-cloud-shadow text-ghibli-text-dark">
               <Github size={sizeClasses.icon - 2} />
               <span className={sizeClasses.badgeText}>GitHub</span>
             </Badge>
           )}
           {isGoogleUser && (
-            <Badge variant="secondary" className="py-0">
+            <Badge variant="secondary" className="py-0 bg-ghibli-cloud-shadow text-ghibli-text-dark">
               <span className={sizeClasses.badgeText}>Google</span>
             </Badge>
           )}
         </div>
 
-        <div className="font-medium">{displayName}</div>
+        <div className="font-medium text-ghibli-text-dark">{displayName}</div>
 
         {showEmail && user.email && (
-          <div className="text-xs text-gray-400">{user.email}</div>
+          <div className="text-xs text-ghibli-text-medium">{user.email}</div>
         )}
       </div>
     </div>

@@ -10,6 +10,7 @@ import { useTokens } from '../contexts/TokenContext';
 import { Button } from './ui/button';
 import { Coins, AlertCircle, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import '../assets/ghibli-theme.css';
 
 /**
  * Component to display user's entry tokens
@@ -20,12 +21,12 @@ const TokenDisplay: React.FC = () => {
 
   return (
     <div className="relative group">
-      <div className="flex items-center rounded-md border border-indigo-600/30 overflow-hidden">
+      <div className="flex items-center rounded-md border border-opacity-30 border-ghibli-blue overflow-hidden">
         {/* Token display button */}
         <Button
           variant="secondary"
           size="sm"
-          className={`h-9 px-3 rounded-r-none border-r ${isLow ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-500' : 'bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400'}`}
+          className={`h-9 px-3 rounded-r-none border-r ${isLow ? 'bg-ghibli-orange bg-opacity-20 hover:bg-opacity-30 text-ghibli-brown' : 'bg-ghibli-blue bg-opacity-10 hover:bg-opacity-20 text-ghibli-text-dark'}`}
           disabled={isLoading}
         >
           <Coins className="h-4 w-4 mr-2" />
@@ -36,7 +37,7 @@ const TokenDisplay: React.FC = () => {
               加载中...
             </span>
           ) : error ? (
-            <span className="flex items-center text-red-400">
+            <span className="flex items-center text-ghibli-orange">
               <AlertCircle className="h-3 w-3 mr-1" />
               错误
             </span>
@@ -50,7 +51,7 @@ const TokenDisplay: React.FC = () => {
           <Button
             variant="secondary"
             size="sm"
-            className="h-9 px-3 rounded-l-none bg-indigo-600 hover:bg-indigo-700 text-white"
+            className="h-9 px-3 rounded-l-none ghibli-button"
           >
             购买入场
           </Button>
@@ -59,9 +60,9 @@ const TokenDisplay: React.FC = () => {
 
       {/* Tooltip for low tokens */}
       {isLow && !isLoading && !error && (
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-36 py-1.5 px-2 bg-amber-500/90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-36 py-1.5 px-2 bg-ghibli-orange bg-opacity-90 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
           入场次数不足，请考虑购买更多
-          <div className="absolute left-1/2 -translate-x-1/2 top-full h-0 w-0 border-x-4 border-x-transparent border-t-4 border-t-amber-500/90"></div>
+          <div className="absolute left-1/2 -translate-x-1/2 top-full h-0 w-0 border-x-4 border-x-transparent border-t-4 border-t-ghibli-orange border-opacity-90"></div>
         </div>
       )}
 
@@ -71,7 +72,7 @@ const TokenDisplay: React.FC = () => {
           onClick={() => refreshTokens()}
           variant="ghost"
           size="sm"
-          className="absolute left-1/2 -translate-x-1/2 top-full mt-2 text-xs text-indigo-400 hover:text-indigo-300 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute left-1/2 -translate-x-1/2 top-full mt-2 text-xs text-ghibli-blue hover:text-ghibli-blue-light opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <RefreshCw className="h-3 w-3 mr-1" />
           重试

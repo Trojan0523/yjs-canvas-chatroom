@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background circle with gradient -->
+  <circle cx="50" cy="50" r="48" fill="url(#skyGradient)" />
+
+  <!-- Leaf shape -->
+  <path d="M50,20 C70,35 80,55 70,75 C55,85 35,75 25,55 C35,35 50,20 50,20 Z"
+        fill="#90b77d" fill-opacity="0.9" />
+
+  <!-- Magical dust particles -->
+  <circle cx="60" cy="40" r="2" fill="white" fill-opacity="0.8" />
+  <circle cx="45" cy="35" r="1.5" fill="white" fill-opacity="0.7" />
+  <circle cx="55" cy="60" r="2" fill="white" fill-opacity="0.8" />
+  <circle cx="40" cy="50" r="1" fill="white" fill-opacity="0.7" />
+  <circle cx="65" cy="55" r="1.2" fill="white" fill-opacity="0.8" />
+
+  <!-- Canvas icon in the center -->
+  <rect x="40" y="45" width="20" height="20" rx="2" fill="white" fill-opacity="0.8" />
+  <path d="M42,50 L58,50 M50,47 L50,63" stroke="#90b77d" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D4E9F7" />
+      <stop offset="100%" stop-color="#c2d8b9" />
+    </linearGradient>
+  </defs>
+</svg>

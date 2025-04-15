@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { CloudBackground } from '../assets/ghibli-decorations';
 
 // 导入实际组件
 import MainLayout from '../layouts/MainLayout';
@@ -14,15 +15,19 @@ import BuyTokens from '../pages/BuyTokens';
 
 // 错误页面组件
 const ErrorPage: React.FC = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
-    <h1 className="text-4xl font-bold mb-4">出错了！</h1>
-    <p className="text-xl mb-8">页面未找到或发生错误</p>
-    <button
-      onClick={() => window.location.href = '/'}
-      className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-    >
-      返回首页
-    </button>
+  <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+    <CloudBackground />
+
+    <div className="ghibli-container p-8 max-w-md w-full text-center relative z-10">
+      <h1 className="text-4xl font-bold mb-4 ghibli-heading">出错了！</h1>
+      <p className="text-xl mb-8 text-ghibli-text-dark">页面未找到或发生错误</p>
+      <button
+        onClick={() => window.location.href = '/'}
+        className="px-6 py-3 ghibli-button"
+      >
+        返回首页
+      </button>
+    </div>
   </div>
 );
 
@@ -34,7 +39,12 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 
   // 加载中显示加载状态
   if (loading) {
-    return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">加载中...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen relative overflow-hidden">
+        <CloudBackground />
+        <div className="ghibli-container p-6 relative z-10">加载中...</div>
+      </div>
+    );
   }
 
   // 如果未认证，重定向到登录页
@@ -54,7 +64,12 @@ const PublicOnlyRoute: React.FC<{ element: React.ReactNode }> = ({ element }) =>
 
   // 加载中显示加载状态
   if (loading) {
-    return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">加载中...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen relative overflow-hidden">
+        <CloudBackground />
+        <div className="ghibli-container p-6 relative z-10">加载中...</div>
+      </div>
+    );
   }
 
   // 如果已认证，重定向到首页

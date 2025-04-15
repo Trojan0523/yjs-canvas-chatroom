@@ -2,19 +2,69 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-15 20:18:58
+ * @LastEditTime: 2025-04-15 23:21:09
  * @Description: 首页组件
  */
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTokens } from '../../contexts/TokenContext';
+import { PaperTexture } from '../../assets/ghibli-decorations';
+import '../../assets/ghibli-theme.css';
 
 /**
  * 生成随机房间 ID
  */
 const generateRoomId = () => {
   return Math.random().toString(36).substring(2, 10);
+};
+
+/**
+ * 魔法粒子效果 - 特定于主页的额外装饰
+ */
+const MagicParticles: React.FC = () => {
+  // 用于设置动画随机延迟
+  const randomDelay = () => Math.random() * 8 + 's';
+
+  return (
+    <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
+      {/* 漂浮的光粒子 - 森林魔法感 */}
+      {Array.from({ length: 30 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full bg-white"
+          style={{
+            width: `${Math.random() * 12 + 3}px`,
+            height: `${Math.random() * 12 + 3}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            opacity: Math.random() * 0.5 + 0.2,
+            filter: 'blur(1px)',
+            animation: `float ${Math.random() * 15 + 10}s infinite ease-in-out, glow 3s infinite alternate ease-in-out`,
+            animationDelay: randomDelay()
+          }}
+        />
+      ))}
+
+      {/* 漂浮的叶子 */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          key={`leaf-${i}`}
+          className="absolute bg-[#90b77d] bg-opacity-60"
+          style={{
+            width: `${Math.random() * 30 + 20}px`,
+            height: `${Math.random() * 30 + 20}px`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 30 + 30}%`,
+            borderRadius: '0 50% 50% 50%',
+            animation: `floatLeaf ${Math.random() * 15 + 20}s infinite ease-in-out`,
+            animationDelay: randomDelay(),
+            transform: `rotate(${Math.random() * 360}deg)`
+          }}
+        />
+      ))}
+    </div>
+  );
 };
 
 /**
@@ -71,25 +121,30 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] px-4 py-12 bg-gradient-to-b from-gray-800 to-gray-900 text-white">
-      <div className="w-full max-w-md p-8 space-y-8 bg-gray-700 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-indigo-500/20">
-        <h2 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] px-4 py-12 relative overflow-hidden">
+      {/* 魔法粒子装饰 */}
+      <MagicParticles />
+
+      <div className="w-full max-w-md p-8 space-y-8 ghibli-container relative z-10 backdrop-blur-sm bg-opacity-95">
+        <PaperTexture />
+
+        <h2 className="text-3xl font-bold text-center ghibli-heading">
           加入画布聊天室
         </h2>
 
         {!isAuthenticated && (
-          <div className="bg-amber-600 text-white p-4 rounded mt-4 text-center">
+          <div className="ghibli-alert ghibli-alert-orange mt-4 text-center">
             <p className="mb-2">您需要先登录才能创建或加入房间</p>
             <div className="mt-2 flex justify-center space-x-4">
               <Link
                 to="/login"
-                className="px-4 py-2 bg-white text-amber-600 rounded hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 ghibli-button"
               >
                 登录
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 bg-amber-700 text-white rounded hover:bg-amber-800 transition-colors"
+                className="px-4 py-2 ghibli-button ghibli-button-orange"
               >
                 注册
               </Link>
@@ -98,13 +153,13 @@ function Home() {
         )}
 
         {isAuthenticated && (
-          <div className="bg-blue-600 text-white p-4 rounded mb-4 text-center">
+          <div className="ghibli-alert ghibli-alert-blue mb-4 text-center">
             欢迎回来！您当前剩余入场次数：{tokens} 次
           </div>
         )}
 
         {isAuthenticated && !hasTokens && (
-          <div className="bg-amber-600 text-white p-4 rounded mt-4 text-center">
+          <div className="ghibli-alert ghibli-alert-orange mt-4 text-center">
             您的入场次数已用完，请购买更多入场次数
             <Link to="/buy-tokens" className="underline font-bold ml-2">
               立即购买
@@ -113,14 +168,14 @@ function Home() {
         )}
 
         {isAuthenticated && tokens <= 2 && tokens > 0 && (
-          <div className="bg-amber-500 bg-opacity-40 text-white p-3 rounded mt-4 text-center text-sm">
+          <div className="ghibli-alert ghibli-alert-orange opacity-80 mt-4 text-center text-sm">
             <p>您的入场次数不多了（剩余{tokens}次），建议尽快购买更多次数</p>
           </div>
         )}
 
         <form onSubmit={handleJoinRoom} className="mt-8 space-y-6">
           <div className="space-y-2">
-            <label htmlFor="roomId" className="text-sm font-medium text-gray-300">
+            <label htmlFor="roomId" className="text-sm font-medium text-ghibli-text-dark">
               房间ID
             </label>
             <input
@@ -130,13 +185,13 @@ function Home() {
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-gray-600 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full ghibli-input"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed"
+            className={`w-full ghibli-button ${!isAuthenticated || !hasTokens ? 'opacity-60' : ''}`}
             disabled={!isAuthenticated || !hasTokens}
           >
             加入房间
@@ -144,12 +199,12 @@ function Home() {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-400 my-3">或者</p>
+          <p className="text-ghibli-text-medium my-3">或者</p>
 
           <button
             onClick={handleCreateRoom}
             disabled={!isAuthenticated || !hasTokens}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors duration-200 disabled:bg-gray-600 disabled:cursor-not-allowed"
+            className={`w-full ghibli-button ghibli-button-green ${!isAuthenticated || !hasTokens ? 'opacity-60' : ''}`}
           >
             创建新房间
           </button>
@@ -159,14 +214,14 @@ function Home() {
           <div className="mt-4 text-center">
             <button
               onClick={handleBuyTokens}
-              className="text-indigo-400 hover:text-indigo-300 text-sm"
+              className="text-ghibli-blue hover:text-ghibli-blue-light text-sm"
             >
               购买更多入场次数
             </button>
           </div>
         )}
 
-        <p className="mt-6 text-sm text-center text-gray-400">
+        <p className="mt-6 text-sm text-center text-ghibli-text-medium">
           创建或加入房间开始协作绘画和聊天
         </p>
       </div>
