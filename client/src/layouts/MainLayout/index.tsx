@@ -2,7 +2,7 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-15 18:59:41
+ * @LastEditTime: 2025-04-15 23:33:20
  * @Description: 主布局组件
  */
 import { useState, useEffect } from 'react';
@@ -12,38 +12,61 @@ import { LogOut, Menu, X, ChevronDown } from 'lucide-react';
 import TokenDisplay from '../../components/TokenDisplay';
 import UserBadge from '../../components/UserBadge';
 import { Button } from '../../components/ui/button';
-import { CloudBackground } from '../../assets/ghibli-decorations';
+import { CloudDecoration } from '../../assets/ghibli-decorations';
 import '../../assets/ghibli-theme.css';
 
 /**
- * 森林背景组件 - 全局使用
+ * 森林背景组件 - 全局使用，模仿shadcn/ui风格
  */
 const GhibliForestBackground: React.FC = () => {
   return (
     <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-      {/* 渐变背景 - 天空和森林色调 */}
+      {/* 渐变背景 - 更偏向米黄暖色调，参考shadcn/ui Kitchen Sink图片 */}
       <div
-        className="absolute inset-0 bg-gradient-to-b from-[#D4E9F7] via-[#e0ece4] to-[#cadecc]"
+        className="absolute inset-0 bg-gradient-to-b from-[#b9c99e] via-[#d3e0c6] to-[#f4efd3]"
         style={{ opacity: 0.9 }}
       ></div>
 
-      {/* 树林层 - 使用简化的颜色波浪代替SVG */}
-      <div className="absolute bottom-0 left-0 right-0 h-[30%] bg-[#90b77d] bg-opacity-30"
+      {/* 远处树林剪影 */}
+      <div className="absolute top-5 right-5 w-[25%] h-[35%]">
+        <svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.4 }}>
+          <path d="M50,10 C65,30 85,40 100,35 C110,60 105,90 90,100 C70,105 40,95 30,70 C20,50 30,25 50,10" fill="#8ea676" />
+          <path d="M20,40 C30,55 45,60 60,55 C70,80 65,100 50,110 C35,105 15,95 10,75 C5,60 10,45 20,40" fill="#5c734f" />
+        </svg>
+      </div>
+
+      {/* 树林层 - 使用简化的颜色波浪 */}
+      <div className="absolute bottom-0 left-0 right-0 h-[25%] bg-[#8ea676] bg-opacity-30"
            style={{ borderTopLeftRadius: '70% 100%', borderTopRightRadius: '50% 100%' }}>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-[20%] bg-[#90b77d] bg-opacity-50"
-           style={{ borderTopLeftRadius: '50% 100%', borderTopRightRadius: '70% 100%' }}>
+      <div className="absolute bottom-0 left-0 right-0 h-[18%] bg-[#8ea676] bg-opacity-40"
+           style={{ borderTopLeftRadius: '60% 100%', borderTopRightRadius: '65% 100%' }}>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-[10%] bg-[#78a76c] bg-opacity-70"
+      <div className="absolute bottom-0 left-0 right-0 h-[10%] bg-[#5c734f] bg-opacity-30"
            style={{ borderTopLeftRadius: '30% 100%', borderTopRightRadius: '40% 100%' }}>
       </div>
 
-      {/* 薄雾效果 */}
-      <div className="absolute inset-x-0 bottom-0 h-[15%] bg-white opacity-20 blur-xl"></div>
+      {/* 小鸟装饰 */}
+      <div className="absolute right-[15%] top-[15%]">
+        <svg width="40" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="18" cy="15" rx="9" ry="8" fill="#7a9eb8" />
+          <circle cx="15" cy="12" r="1.5" fill="#263238" />
+          <path d="M25,13 L32,10" stroke="#5c734f" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M25,17 L30,20" stroke="#5c734f" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M10,17 C5,22 8,25 12,23" fill="#7a9eb8" />
+        </svg>
+      </div>
     </div>
   );
+};
+
+/**
+ * 水彩纸纹理组件
+ */
+const WatercolorTexture: React.FC = () => {
+  return <div className="ghibli-watercolor-texture"></div>;
 };
 
 /**
@@ -107,14 +130,17 @@ function MainLayout() {
       <GhibliForestBackground />
 
       {/* 装饰性云朵 */}
-      <CloudBackground />
+      <CloudDecoration />
+
+      {/* 水彩纸纹理 */}
+      <WatercolorTexture />
 
       {/* 页面头部 - 使用固定定位实现更好的吸顶效果 */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
           scrolled
-            ? 'py-2 bg-opacity-80 shadow-md backdrop-blur-md border-opacity-40 border-b border-ghibli-blue-light'
-            : 'py-4 bg-opacity-30 backdrop-blur-sm'
+            ? 'py-2 bg-[#f4efd3] bg-opacity-90 shadow-md border-opacity-60 border-b border-[#c2b280]'
+            : 'py-4 bg-[#f4efd3] bg-opacity-80 border-b border-[#c2b280] border-opacity-30'
         }`}
       >
         <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
@@ -160,22 +186,22 @@ function MainLayout() {
                     <div className="absolute right-0 mt-2 w-48 ghibli-container py-1 z-20">
                       <Link
                         to="/profile"
-                        className="block px-4 py-2 text-sm text-ghibli-text-dark hover:bg-ghibli-blue-light hover:bg-opacity-20"
+                        className="block px-4 py-2 text-sm text-ghibli-text-dark hover:bg-[#c2b280] hover:bg-opacity-20"
                         onClick={() => setProfileDropdownOpen(false)}
                       >
                         个人资料
                       </Link>
                       <Link
                         to="/buy-tokens"
-                        className="block px-4 py-2 text-sm text-ghibli-text-dark hover:bg-ghibli-blue-light hover:bg-opacity-20"
+                        className="block px-4 py-2 text-sm text-ghibli-text-dark hover:bg-[#c2b280] hover:bg-opacity-20"
                         onClick={() => setProfileDropdownOpen(false)}
                       >
                         购买入场次数
                       </Link>
-                      <div className="border-t border-ghibli-cloud-shadow my-1"></div>
+                      <div className="border-t border-[#c2b280] my-1"></div>
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left block px-4 py-2 text-sm text-ghibli-orange hover:bg-ghibli-blue-light hover:bg-opacity-20 flex items-center"
+                        className="w-full text-left block px-4 py-2 text-sm text-[#756c48] hover:bg-[#c2b280] hover:bg-opacity-20 flex items-center"
                       >
                         <LogOut size={14} className="mr-2" />
                         退出登录
@@ -230,7 +256,7 @@ function MainLayout() {
                   {isAuthenticated ? (
                     <>
                       {/* 移动端用户信息 */}
-                      <div className="py-3 border-t border-b border-ghibli-cloud-shadow my-2">
+                      <div className="py-3 border-t border-b border-[#c2b280] my-2">
                         <div className="mb-3">
                           <UserBadge user={user} showEmail={true} size="lg" />
                         </div>
@@ -256,7 +282,7 @@ function MainLayout() {
                           handleLogout();
                           toggleMenu();
                         }}
-                        className="w-full justify-start text-ghibli-orange flex items-center"
+                        className="w-full justify-start text-[#756c48] flex items-center"
                       >
                         <LogOut size={16} className="mr-2" />
                         退出登录
@@ -297,7 +323,7 @@ function MainLayout() {
       </main>
 
       {/* 页面底部 */}
-      <footer className="py-6 px-4 border-t border-opacity-20 border-ghibli-blue-light relative z-10 backdrop-blur-sm bg-opacity-50">
+      <footer className="py-6 px-4 border-t border-[#c2b280] border-opacity-30 relative z-10 bg-[#f4efd3] bg-opacity-60">
         <div className="container mx-auto text-center text-ghibli-text-medium text-sm">
           <p>&copy; {new Date().getFullYear()} 协作画布聊天室. 保留所有权利.</p>
         </div>

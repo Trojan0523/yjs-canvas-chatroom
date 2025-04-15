@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { CloudBackground } from '../assets/ghibli-decorations';
+import { CloudDecoration } from '../assets/ghibli-decorations';
 
 // 导入实际组件
 import MainLayout from '../layouts/MainLayout';
@@ -16,7 +16,7 @@ import BuyTokens from '../pages/BuyTokens';
 // 错误页面组件
 const ErrorPage: React.FC = () => (
   <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-    <CloudBackground />
+    <CloudDecoration />
 
     <div className="ghibli-container p-8 max-w-md w-full text-center relative z-10">
       <h1 className="text-4xl font-bold mb-4 ghibli-heading">出错了！</h1>
@@ -41,7 +41,7 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen relative overflow-hidden">
-        <CloudBackground />
+        <CloudDecoration />
         <div className="ghibli-container p-6 relative z-10">加载中...</div>
       </div>
     );
@@ -66,7 +66,7 @@ const PublicOnlyRoute: React.FC<{ element: React.ReactNode }> = ({ element }) =>
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen relative overflow-hidden">
-        <CloudBackground />
+        <CloudDecoration />
         <div className="ghibli-container p-6 relative z-10">加载中...</div>
       </div>
     );

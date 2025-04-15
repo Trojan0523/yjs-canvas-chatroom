@@ -2,7 +2,7 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-15 23:21:09
+ * @LastEditTime: 2025-04-15 20:18:58
  * @Description: 首页组件
  */
 import { useState } from 'react';
@@ -20,49 +20,53 @@ const generateRoomId = () => {
 };
 
 /**
- * 魔法粒子效果 - 特定于主页的额外装饰
+ * 吉卜力风格元素装饰
  */
-const MagicParticles: React.FC = () => {
-  // 用于设置动画随机延迟
-  const randomDelay = () => Math.random() * 8 + 's';
+const GhibliDecorations: React.FC = () => {
+  // 生成装饰位置
+  const generatePos = () => ({
+    top: `${Math.random() * 80 + 10}%`,
+    left: `${Math.random() * 80 + 10}%`,
+    animationDelay: `${Math.random() * 5}s`,
+  });
 
   return (
-    <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-      {/* 漂浮的光粒子 - 森林魔法感 */}
-      {Array.from({ length: 30 }).map((_, i) => (
+    <div className="absolute inset-0 overflow-hidden z-10 pointer-events-none">
+      {/* 漂浮的光点 */}
+      {Array.from({ length: 15 }).map((_, i) => (
         <div
-          key={i}
+          key={`light-${i}`}
           className="absolute rounded-full bg-white"
           style={{
-            width: `${Math.random() * 12 + 3}px`,
-            height: `${Math.random() * 12 + 3}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            opacity: Math.random() * 0.5 + 0.2,
+            width: `${Math.random() * 10 + 2}px`,
+            height: `${Math.random() * 10 + 2}px`,
+            opacity: Math.random() * 0.3 + 0.1,
             filter: 'blur(1px)',
-            animation: `float ${Math.random() * 15 + 10}s infinite ease-in-out, glow 3s infinite alternate ease-in-out`,
-            animationDelay: randomDelay()
+            animation: 'float 8s infinite ease-in-out alternate',
+            ...generatePos(),
           }}
         />
       ))}
 
-      {/* 漂浮的叶子 */}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <div
-          key={`leaf-${i}`}
-          className="absolute bg-[#90b77d] bg-opacity-60"
-          style={{
-            width: `${Math.random() * 30 + 20}px`,
-            height: `${Math.random() * 30 + 20}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 30 + 30}%`,
-            borderRadius: '0 50% 50% 50%',
-            animation: `floatLeaf ${Math.random() * 15 + 20}s infinite ease-in-out`,
-            animationDelay: randomDelay(),
-            transform: `rotate(${Math.random() * 360}deg)`
-          }}
-        />
-      ))}
+      {/* 小树叶 */}
+      <div className="absolute bottom-[20%] right-[10%]">
+        <svg width="70" height="50" viewBox="0 0 70 50" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.6 }}>
+          <path d="M35,5 C50,15 60,25 50,40 C35,50 15,40 10,20 C15,10 25,0 35,5" fill="#8ea676" />
+          <path d="M40,20 L55,15" stroke="#5c734f" strokeWidth="1" strokeLinecap="round" />
+          <path d="M38,30 L48,35" stroke="#5c734f" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+      </div>
+
+      {/* 小鸟 */}
+      <div className="absolute top-[15%] left-[10%]" style={{ animation: 'float 10s infinite ease-in-out alternate' }}>
+        <svg width="40" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="18" cy="15" rx="9" ry="8" fill="#7a9eb8" />
+          <circle cx="15" cy="12" r="1.5" fill="#263238" />
+          <path d="M25,13 L32,10" stroke="#5c734f" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M25,17 L30,20" stroke="#5c734f" strokeWidth="1.5" strokeLinecap="round" />
+          <path d="M10,17 C5,22 8,25 12,23" fill="#7a9eb8" />
+        </svg>
+      </div>
     </div>
   );
 };
@@ -122,10 +126,11 @@ function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] px-4 py-12 relative overflow-hidden">
-      {/* 魔法粒子装饰 */}
-      <MagicParticles />
+      {/* 吉卜力风格的装饰元素 */}
+      <GhibliDecorations />
 
-      <div className="w-full max-w-md p-8 space-y-8 ghibli-container relative z-10 backdrop-blur-sm bg-opacity-95">
+      {/* 主内容容器 */}
+      <div className="w-full max-w-md p-8 space-y-8 ghibli-container relative z-20">
         <PaperTexture />
 
         <h2 className="text-3xl font-bold text-center ghibli-heading">
@@ -144,7 +149,7 @@ function Home() {
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 ghibli-button ghibli-button-orange"
+                className="px-4 py-2 ghibli-button ghibli-button-green"
               >
                 注册
               </Link>
@@ -214,7 +219,7 @@ function Home() {
           <div className="mt-4 text-center">
             <button
               onClick={handleBuyTokens}
-              className="text-ghibli-blue hover:text-ghibli-blue-light text-sm"
+              className="text-[#7a9eb8] hover:text-[#4d7188] text-sm underline"
             >
               购买更多入场次数
             </button>
