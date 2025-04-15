@@ -9,6 +9,7 @@ export interface User {
   provider?: string;
   photo?: string;
   displayName?: string;
+  entryTokens?: number;
 }
 
 export interface LoginRequest {

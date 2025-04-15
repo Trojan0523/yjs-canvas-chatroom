@@ -2,7 +2,7 @@
  * @Author: BuXiongYu
  * @Date: 2025-04-11 18:44:43
  * @LastEditors: BuXiongYu
- * @LastEditTime: 2025-04-14 00:07:38
+ * @LastEditTime: 2025-04-15 19:34:03
  * @Description: 画布聊天室组件
  */
 import { useState, useRef, useEffect } from 'react';
@@ -12,6 +12,9 @@ import { Stage, Layer, Line } from 'react-konva';
 import Konva from 'konva';
 import * as Y from 'yjs';
 import { encodeStateAsUpdate, applyUpdate } from 'yjs';
+import { useAuth } from '../../contexts/AuthContext';
+import { useTokens } from '../../contexts/TokenContext';
+import { toast } from '../../hooks/use-toast';
 
 // 默认API地址
 const API_URL = import.meta.env.VITE_API_URL || '';
@@ -29,16 +32,71 @@ interface SharedLine {
 function Canvas() {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { tokens, deductToken, hasTokens } = useTokens();
   const [brushColor, setBrushColor] = useState('#000000');
   const [brushRadius, setBrushRadius] = useState(3);
   const [usersCount, setUsersCount] = useState(0);
   const [lines, setLines] = useState<SharedLine[]>([]);
+  const [tokenDeducted, setTokenDeducted] = useState(false);
   const isDrawingRef = useRef(false);
   const stageRef = useRef<Konva.Stage | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const docRef = useRef<Y.Doc | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const linesArrayRef = useRef<Y.Array<Y.Map<any>>>(null!);
+
+  // 初始身份验证和令牌检查
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { message: '请先登录后再加入房间', from: '/' } });
+      return;
+    }
+
+    if (!hasTokens && !tokenDeducted) {
+      toast({
+        title: "没有入场次数",
+        description: "您没有可用的入场次数，请购买入场次数后再尝试进入房间。",
+        variant: "destructive",
+      });
+      navigate('/');
+      return;
+    }
+
+    // 如果用户有令牌但尚未扣除，则尝试扣除一个令牌
+    const handleTokenDeduction = async () => {
+      if (!tokenDeducted && hasTokens) {
+        try {
+          const success = await deductToken();
+          if (success) {
+            setTokenDeducted(true);
+            toast({
+              title: "已扣除入场次数",
+              description: `您已成功进入房间，剩余入场次数: ${tokens - 1}`,
+            });
+          } else {
+            // 如果令牌扣除失败，返回主页
+            toast({
+              title: "扣除入场次数失败",
+              description: "无法扣除入场次数，请稍后再试。",
+              variant: "destructive",
+            });
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Error deducting token:', error);
+          toast({
+            title: "扣除入场次数出错",
+            description: "出现错误，请稍后再试。",
+            variant: "destructive",
+          });
+          navigate('/');
+        }
+      }
+    };
+
+    handleTokenDeduction();
+  }, [isAuthenticated, hasTokens, tokenDeducted, navigate, deductToken, tokens]);
 
   // 更新线条状态
   const updateLinesState = () => {
@@ -54,13 +112,6 @@ function Canvas() {
         const color = item.get('color');
         const strokeWidth = item.get('strokeWidth');
 
-        console.log('Line data:', {
-          hasPoints: !!points,
-          pointsLength: points ? points.length : 0,
-          color,
-          strokeWidth
-        });
-
         return {
           points: points as number[],
           color: color as string,
@@ -68,7 +119,6 @@ function Canvas() {
         };
       });
 
-      console.log(`Updating UI with ${linesArray.length} lines`);
       setLines(linesArray);
     } catch (err) {
       console.error('Error in updateLinesState:', err);
@@ -77,7 +127,6 @@ function Canvas() {
 
   // 初始化 Yjs 文档和数组
   useEffect(() => {
-    console.log('Initializing Yjs document');
     try {
       // 创建新的 Yjs 文档
       const doc = new Y.Doc();
@@ -88,7 +137,6 @@ function Canvas() {
       const yLines = doc.getArray<Y.Map<any>>('lines');
       linesArrayRef.current = yLines;
 
-      console.log('Created Yjs document and array');
 
       // 监听数组变化
       yLines.observe((event) => {

@@ -10,6 +10,7 @@ import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
 import Profile from '../pages/Auth/Profile';
 import OAuthCallback from '../pages/Auth/OAuthCallback';
+import BuyTokens from '../pages/BuyTokens';
 
 // 错误页面组件
 const ErrorPage: React.FC = () => (
@@ -97,6 +98,10 @@ export const routes: RouteObject[] = [
       {
         path: 'oauth-callback',
         element: <OAuthCallback />,
+      },
+      {
+        path: 'buy-tokens',
+        element: <ProtectedRoute element={<BuyTokens />} />,
       },
       {
         path: '*',

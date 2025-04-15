@@ -1,3 +1,10 @@
+/*
+ * @Author: BuXiongYu
+ * @Date: 2025-04-12 13:48:44
+ * @LastEditors: BuXiongYu
+ * @LastEditTime: 2025-04-15 19:55:45
+ * @Description: 请填写简介
+ */
 import { Controller, Get, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -23,4 +30,4 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-} 
+}
