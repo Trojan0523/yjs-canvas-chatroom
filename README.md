@@ -103,10 +103,6 @@ This application uses Yjs, a CRDT (Conflict-free Replicated Data Type) framework
 
 MIT
 
-## Author
-
-Created by [Your Name]
-
 ## Integrated Mode (Server-Side Rendering)
 
 You can now run the application in an integrated mode where the server serves the client application. This simplifies deployment and allows you to run just a single server process.
